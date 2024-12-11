@@ -8,33 +8,55 @@
 import SwiftUI
 
 struct WelcomeView: View {
-    @ObservedObject var viewModel = AuthService()
+    @ObservedObject var userObj = AuthService()
 
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("Welcome")
+            VStack(spacing: 20) {
+                Text("Schedulr")
                     .font(.largeTitle)
-                    .padding()
-                
-                NavigationLink(destination: SignUpView()){
+                    .fontWeight(.bold)
+                    .padding(.top)
+
+                Text("Create an Account")
+                    .font(.headline)
+
+                Group {
+                    TextField("Username", text: $userObj.username)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
                     
-                    Text("Make an Account")
+                    TextField("Email", text: $userObj.email)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    
+                    SecureField("Password", text: $userObj.password)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                }
+                .padding([.leading, .trailing], 16)
+
+                Button(action: {
+                    userObj.signUp(username: userObj.username, email: userObj.email, password: userObj.password)
+                }) {
+                    Text("Sign Up")
+                        .fontWeight(.semibold)
                         .foregroundColor(.white)
                         .padding()
+                        .frame(maxWidth: .infinity)
                         .background(Color.blue)
                         .cornerRadius(8)
-                }.padding()
-                
-                NavigationLink(destination: LoginView()){
-                    
-                    Text("Already have an Account?")
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .cornerRadius(8)
-                }.padding()
+                }
+                .padding([.leading, .trailing], 16)
+
+                HStack {
+                    Text("Already have an account?")
+                    NavigationLink(destination: LoginView()) {
+                        Text("Login")
+                            .foregroundColor(.blue)
+                            .underline()
+                    }
+                }
+                .padding(.top, 8)
             }
+            .padding()
         }
         .navigationBarBackButtonHidden(true)
     }
